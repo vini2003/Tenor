@@ -6,8 +6,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.FacingBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.text.LiteralText;
@@ -22,13 +24,18 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.MutablePair;
 import tenor.block.entity.WireNodeBlockEntity;
+import tenor.initialize.TenorEnergies;
+import tenor.network.NetworkComponent;
+import tenor.network.NetworkManager;
+import tenor.network.NetworkTicker;
+import tenor.network.NetworkTracer;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WireNodeBlock extends Block implements BlockEntityProvider {
+public class WireNodeBlock extends Block implements BlockEntityProvider, NetworkComponent {
 	public static final Map<Integer, List<Double>> OFFSETS = new HashMap<Integer, List<Double>>() {{
 		put(0, Arrays.asList(0.25));
 		put(1, Arrays.asList(0.5));
@@ -252,7 +259,7 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 
 		if (WireNodeBlockEntity.lu != null) {
 			player.addChatMessage(new LiteralText("Connected the connectors at " + WireNodeBlockEntity.lu.getPos().toShortString() + " and " + pos.toShortString()), true);
-			WireNodeBlockEntity.lu.children.add(MutablePair.of(OFFSETS.get(tier).get(world.random.nextInt(OFFSETS.get(tier).size())), (WireNodeBlockEntity) world.getBlockEntity(pos)));
+			WireNodeBlockEntity.lu.children.add((WireNodeBlockEntity) world.getBlockEntity(pos));
 			WireNodeBlockEntity.lu = null;
 		} else {
 			player.addChatMessage(new LiteralText("Selected the connector at " + pos.toShortString() + "."), true);
@@ -288,5 +295,32 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
 		super.appendProperties(builder);
 		builder.add(FACING);
+	}
+
+	/**
+	 * Implement Network API.
+	 */
+	@Override
+	public NetworkTicker getNetworkType() {
+		return TenorEnergies.ENERGY_TYPE;
+	}
+
+	@Override
+	public boolean accepts(Object... objects) {
+		if (objects[0] != getNetworkType()) return false;
+
+		for (int i = 1; i < objects.length; ++i) {
+			if (objects[i] instanceof WireNodeBlock) {
+				WireNodeBlock block = (WireNodeBlock) objects[i];
+				if (tier != block.tier) return false;
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean isBuffer() {
+		return true;
 	}
 }

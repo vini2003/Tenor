@@ -9,8 +9,12 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.particle.ParticleTypes;
+import org.lwjgl.opengl.GL11;
 import tenor.block.WireNodeBlock;
 import tenor.block.entity.WireNodeBlockEntity;
+import tenor.initialize.TenorEnergies;
+import tenor.network.NetworkManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +27,12 @@ public class WireNodeBlockEntityRenderer extends BlockEntityRenderer<WireNodeBlo
 
 	@Override
 	public void render(WireNodeBlockEntity be, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, int overlay) {
-		for (Map.Entry<Double, WireNodeBlockEntity> pr : be.children) {
-			WireNodeBlockEntity ch = pr.getValue();
+		if (!NetworkManager.INSTANCE.get(TenorEnergies.ENERGY_TYPE, be.getPos()).isNullOrEmpty()) {
+			be.getWorld().addParticle(ParticleTypes.SMOKE, be.getPos().getX(), be.getPos().getY(), be.getPos().getZ(), 0, 0, 0);
+		}
+
+		for (WireNodeBlockEntity ch : be.children) {
+
 
 			double oY = WireNodeBlock.OFFSETS.get(((WireNodeBlock) be.getCachedState().getBlock()).tier).get(0);
 

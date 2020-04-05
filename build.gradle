@@ -38,8 +38,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	modImplementation "io.github.cottonmc:UniversalComponents:0.5.2+1.15.2"
-
-	modImplementation 'com.github.OnyxStudios.Cardinal-Components-API:Cardinal-Components-API:2.3.4'
+	include "io.github.cottonmc:UniversalComponents:0.5.2+1.15.2"
 }
 
 processResources {
