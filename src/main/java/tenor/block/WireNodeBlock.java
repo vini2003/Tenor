@@ -30,9 +30,9 @@ import java.util.Map;
 
 public class WireNodeBlock extends Block implements BlockEntityProvider {
 	public static final Map<Integer, List<Double>> OFFSETS = new HashMap<Integer, List<Double>>() {{
-		put(0, Arrays.asList(0.75));
-		put(1, Arrays.asList(0.375, 0.5));
-		put(2, Arrays.asList(0.4375, 0.5625, 0.6875, 0.8125));
+		put(0, Arrays.asList(0.25));
+		put(1, Arrays.asList(0.5));
+		put(2, Arrays.asList(0.8125));
 	}};
 
 	public static final Map<Integer, Map<Direction, VoxelShape>> SHAPES = new HashMap<Integer, Map<Direction, VoxelShape>>() {{

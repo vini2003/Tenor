@@ -1,5 +1,6 @@
 package tenor.block.entity.renderer;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -25,6 +26,8 @@ public class WireNodeBlockEntityRenderer extends BlockEntityRenderer<WireNodeBlo
 		for (Map.Entry<Double, WireNodeBlockEntity> pr : be.children) {
 			WireNodeBlockEntity ch = pr.getValue();
 
+			double oY = WireNodeBlock.OFFSETS.get(((WireNodeBlock) be.getCachedState().getBlock()).tier).get(0);
+
 			double x1 = be.getPos().getX();
 			double y1 = be.getPos().getY();
 			double z1 = be.getPos().getZ();
@@ -33,31 +36,31 @@ public class WireNodeBlockEntityRenderer extends BlockEntityRenderer<WireNodeBlo
 				case NORTH:
 					x1 += 0.5f;
 					y1 += 0.5f;
-					z1 += 1f - pr.getKey().floatValue();
+					z1 += 1f - oY;
 					break;
 				case SOUTH:
 					x1 += 0.5f;
 					y1 += 0.5f;
-					z1 += pr.getKey().floatValue();
+					z1 += oY;
 					break;
 				case WEST:
-					x1 += 1f - pr.getKey().floatValue();
+					x1 += 1f - oY;
 					y1 += 0.5f;
 					z1 += 0.5f;
 					break;
 				case EAST:
-					x1 += pr.getKey().floatValue();
+					x1 += oY;
 					y1 += 0.5f;
 					z1 += 0.5f;
 					break;
 				case UP:
 					x1 += 0.5f;
-					y1 += pr.getKey().floatValue();
+					y1 += oY;
 					z1 += 0.5f;
 					break;
 				case DOWN:
 					x1 += 0.5f;
-					y1 += 1 - pr.getKey().floatValue();
+					y1 += 1 - oY;
 					z1 += 0.5f;
 					break;
 			}
@@ -66,35 +69,37 @@ public class WireNodeBlockEntityRenderer extends BlockEntityRenderer<WireNodeBlo
 			double y3 = ch.getPos().getY();
 			double z3 = ch.getPos().getZ();
 
+			oY = WireNodeBlock.OFFSETS.get(((WireNodeBlock) ch.getCachedState().getBlock()).tier).get(0);
+
 			switch (ch.getWorld().getBlockState(ch.getPos()).get(WireNodeBlock.FACING)) {
 				case NORTH:
 					x3 += 0.5f;
 					y3 += 0.5f;
-					z3 += 1f - pr.getKey().floatValue();
+					z3 += 1f - oY;
 					break;
 				case SOUTH:
 					x3 += 0.5f;
 					y3 += 0.5f;
-					z3 += pr.getKey().floatValue();
+					z3 += oY;
 					break;
 				case WEST:
-					x3 += 1f - pr.getKey().floatValue();
+					x3 += 1f - oY;
 					y3 += 0.5f;
 					z3 += 0.5f;
 					break;
 				case EAST:
-					x3 += pr.getKey().floatValue();
+					x3 += oY;
 					y3 += 0.5f;
 					z3 += 0.5f;
 					break;
 				case UP:
 					x3 += 0.5f;
-					y3 += pr.getKey().floatValue();
+					y3 += oY;
 					z3 += 0.5f;
 					break;
 				case DOWN:
 					x3 += 0.5f;
-					y3 += 1 - pr.getKey().floatValue();
+					y3 += 1 - oY;
 					z3 += 0.5f;
 					break;
 			}
