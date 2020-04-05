@@ -1,0 +1,31 @@
+{
+  "variants": {
+    "facing=up": {
+      "model": "tenor:block/connector_high_voltage"
+    },
+    "facing=down": {
+      "model": "tenor:block/connector_high_voltage",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "tenor:block/connector_high_voltage",
+      "y": 90,
+      "x": 90
+    },
+    "facing=south": {
+      "model": "tenor:block/connector_high_voltage",
+      "y": 180,
+      "x": 90
+    },
+    "facing=west": {
+      "model": "tenor:block/connector_high_voltage",
+      "y": 270,
+      "x": 90
+    },
+    "facing=north": {
+      "model": "tenor:block/connector_high_voltage",
+      "y": 0,
+      "x": 90
+    }
+  }
+}

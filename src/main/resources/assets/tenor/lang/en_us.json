@@ -1,0 +1,5 @@
+{
+  "block.tenor.connector_low_voltage": "Low-Voltage Connector",
+  "block.tenor.connector_medium_voltage": "Medium-Voltage Connector",
+  "block.tenor.connector_high_voltage": "High-Voltage Connector"
+}

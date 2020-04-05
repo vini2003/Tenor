@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    " 2 ",
+    "121"
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:green_concrete"
+    },
+    "2": {
+      "tag": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "tenor:connector_high_voltage",
+    "count": 2
+  }
+}

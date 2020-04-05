@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "tenor",
+  "version": "${version}",
+
+  "name": "Tenor",
+  "description": "Soviet technology for all, as was intended.",
+  "authors": [
+    "vini2003"
+  ],
+  "contact": {
+    "sources": "https://github.com/vini2003/Tenor"
+  },
+
+  "license": "GPLv3",
+  "icon": "assets/tenor/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "tenor.TenorCommon"
+    ],
+    "client": [
+      "tenor.TenorClient"
+    ]
+  },
+  "mixins": [
+    "tenor.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.15.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
