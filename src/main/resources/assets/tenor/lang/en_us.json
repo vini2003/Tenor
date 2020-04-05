@@ -3,6 +3,7 @@
   "block.tenor.connector_medium_voltage": "Medium-Voltage Connector",
   "block.tenor.connector_high_voltage": "High-Voltage Connector",
   "block.tenor.copper_ore": "Copper Ore",
+  "block.tenor.copper_block": "Copper Block",
   "item.tenor.copper_coil": "Copper Coil",
   "item.tenor.gold_coil": "Gold Coil",
   "item.tenor.fiber_coil": "Fiber Coil",
@@ -16,5 +17,6 @@
   "item.tenor.copper_nugget": "Copper Nugget",
   "item.tenor.copper_pickaxe": "Copper Pickaxe",
   "item.tenor.copper_shovel": "Copper Shovel",
-  "item.tenor.copper_sword": "Copper Sword"
+  "item.tenor.copper_sword": "Copper Sword",
+  "itemGroup.tenor.tenor": "Tenor"
 }

@@ -260,6 +260,10 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 				second.parents.add(WireNodeBlockEntity.getSelected(world));
 
 				WireNodeBlockEntity.getSelected(world).children.add(second);
+
+				WireNodeBlockEntity.getSelected(world).markDirty();
+				second.markDirty();
+
 				WireNodeBlockEntity.setSelected(world, null);
 
 				player.getStackInHand(hand).decrement(1);

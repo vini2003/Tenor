@@ -2,6 +2,7 @@ package tenor.block.entity;
 
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.energy.CapacitorComponent;
+import io.github.cottonmc.component.energy.CapacitorComponentHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -12,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -77,29 +79,19 @@ public class WireNodeBlockEntity extends BlockEntityEnergized implements Tickabl
 
 		int available = Math.min(getMaxTransfer(), getMaxEnergy() - getCurrentEnergy());
 
-		if (attachedBlock instanceof BlockEntityProvider) {
-			BlockEntity attachedEntity = world.getBlockEntity(attachedPos);
+		if (CapacitorComponentHelper.hasCapacitorComponent(world, attachedPos, connectorState.get(WireNodeBlock.FACING).getOpposite())) {
+			CapacitorComponent component = CapacitorComponentHelper.getCapacitorComponent(world, attachedPos, connectorState.get(WireNodeBlock.FACING).getOpposite());
 
-			if (attachedEntity instanceof CapacitorComponent) {
-				CapacitorComponent component = (CapacitorComponent) attachedEntity;
-
-				if (component.canInsertEnergy() && !component.canExtractEnergy()) {
-					available -= (available - component.insertEnergy(TenorEnergies.ENERGY, component.getMaxEnergy(), ActionType.PERFORM));
-
-					System.out.println("Inserted from " + this + " to " + attachedEntity);
-				} else if (!component.canInsertEnergy() && component.canExtractEnergy()) {
-					available += component.extractEnergy(TenorEnergies.ENERGY, component.getCurrentEnergy(), ActionType.PERFORM);
-
-					System.out.println("Extracted from " + attachedEntity + " to " + this);
-				}
+			if (component.canInsertEnergy() && !component.canExtractEnergy()) {
+				available -= (available - component.insertEnergy(TenorEnergies.ENERGY, component.getMaxEnergy(), ActionType.PERFORM));
+			} else if (!component.canInsertEnergy() && component.canExtractEnergy()) {
+				available += component.extractEnergy(TenorEnergies.ENERGY, component.getCurrentEnergy(), ActionType.PERFORM);
 			}
 		}
 
 		if (!children.isEmpty()) {
 			for (BlockEntityEnergized child : this.children) {
 				available -= (available - child.insertEnergy(TenorEnergies.ENERGY, Math.min(available, child.getMaxTransfer()), ActionType.PERFORM));
-
-				System.out.println("Inserted from " + this + " to " + child);
 			}
 		}
 
@@ -132,6 +124,8 @@ public class WireNodeBlockEntity extends BlockEntityEnergized implements Tickabl
 	}
 
 	public static LinkedHashSet<Vector3f> getSegments(WireNodeBlockEntity be, WireNodeBlockEntity ch) {
+		LinkedHashSet<Vector3f> positions = new LinkedHashSet<>();
+
 		double oY = WireNodeBlock.OFFSETS.get(((WireNodeBlock) be.getCachedState().getBlock()).tier).get(0);
 
 		double x1 = be.getPos().getX();
@@ -177,6 +171,10 @@ public class WireNodeBlockEntity extends BlockEntityEnergized implements Tickabl
 
 		oY = WireNodeBlock.OFFSETS.get(((WireNodeBlock) ch.getCachedState().getBlock()).tier).get(0);
 
+		if (!(ch.getWorld().getBlockState(ch.getPos()).getBlock() instanceof WireNodeBlock)) {
+			return positions;
+		}
+
 		switch (ch.getWorld().getBlockState(ch.getPos()).get(WireNodeBlock.FACING)) {
 			case NORTH:
 				x3 += 0.5f;
@@ -216,7 +214,6 @@ public class WireNodeBlockEntity extends BlockEntityEnergized implements Tickabl
 		double dZ = (z3 - z1) / 100;
 		double cZ = 0;
 
-		LinkedHashSet<Vector3f> positions = new LinkedHashSet<>();
 
 		for (double t = 0; t < 1; t += 0.01) {
 			// C(t)=(1−t)2P0+2t(1−t)P1+t2P2
@@ -255,5 +252,50 @@ public class WireNodeBlockEntity extends BlockEntityEnergized implements Tickabl
 	@Override
 	public int getMaxEnergy() {
 		return 4096 * (tier + 1);
+	}
+
+	@Override
+	public CompoundTag toTag(CompoundTag tag) {
+		CompoundTag childrenSubtag = new CompoundTag();
+
+		final int[] i = {0};
+
+		this.children.forEach(child -> {
+			childrenSubtag.putIntArray(String.valueOf(i[0]), new int[]{child.getPos().getX(), child.getPos().getY(), child.getPos().getZ()});
+			++i[0];
+		});
+
+		CompoundTag parentSubtag = new CompoundTag();
+
+		final int[] k = {0};
+
+		this.parents.forEach(parent -> {
+			parentSubtag.putIntArray(String.valueOf(k), new int[]{parent.getPos().getX(), parent.getPos().getY(), parent.getPos().getZ()});
+			++k[0];
+		});
+
+		tag.put("children", childrenSubtag);
+		tag.put("parents", parentSubtag);
+
+		return super.toTag(tag);
+	}
+
+	@Override
+	public void fromTag(CompoundTag tag) {
+		CompoundTag childrenSubtag = (CompoundTag) tag.get("children");
+
+		for (int i = 0; i < childrenSubtag.getSize(); ++i) {
+			int[] position = childrenSubtag.getIntArray(String.valueOf(i));
+			this.children.add((WireNodeBlockEntity) this.world.getBlockEntity(new BlockPos(position[0], position[1], position[2])));
+		}
+
+		CompoundTag parentSubtag = (CompoundTag) tag.get("parents");
+
+		for (int k = 0; k < parentSubtag.getSize(); ++k) {
+			int[] position = parentSubtag.getIntArray(String.valueOf(k));
+			this.children.add((WireNodeBlockEntity) this.world.getBlockEntity(new BlockPos(position[0], position[1], position[2])));
+		}
+
+		super.fromTag(tag);
 	}
 }

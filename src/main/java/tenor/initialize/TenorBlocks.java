@@ -19,11 +19,12 @@ import tenor.block.entity.WireNodeBlockEntity;
 import java.util.function.Supplier;
 
 public class TenorBlocks {
-	public static final Block CONNECTOR_LOW_VOLTAGE = register("connector_low_voltage", RenderLayer.getCutout(), new WireNodeBlock(0, FabricBlockSettings.copy(Blocks.QUARTZ_BLOCK).nonOpaque().build()), new Item.Settings().group(ItemGroup.MISC));
-	public static final Block CONNECTOR_MEDIUM_VOLTAGE = register("connector_medium_voltage", RenderLayer.getCutout(), new WireNodeBlock(1, FabricBlockSettings.copy(Blocks.TERRACOTTA).nonOpaque().build()), new Item.Settings().group(ItemGroup.MISC));
-	public static final Block CONNECTOR_HIGH_VOLTAGE = register("connector_high_voltage", RenderLayer.getCutout(), new WireNodeBlock(2, FabricBlockSettings.copy(Blocks.GREEN_CONCRETE).nonOpaque().build()), new Item.Settings().group(ItemGroup.MISC));
+	public static final Block CONNECTOR_LOW_VOLTAGE = register("connector_low_voltage", RenderLayer.getCutout(), new WireNodeBlock(0, FabricBlockSettings.copy(Blocks.QUARTZ_BLOCK).nonOpaque().build()), new Item.Settings().group(TenorItemGroups.TENOR));
+	public static final Block CONNECTOR_MEDIUM_VOLTAGE = register("connector_medium_voltage", RenderLayer.getCutout(), new WireNodeBlock(1, FabricBlockSettings.copy(Blocks.TERRACOTTA).nonOpaque().build()), new Item.Settings().group(TenorItemGroups.TENOR));
+	public static final Block CONNECTOR_HIGH_VOLTAGE = register("connector_high_voltage", RenderLayer.getCutout(), new WireNodeBlock(2, FabricBlockSettings.copy(Blocks.GREEN_CONCRETE).nonOpaque().build()), new Item.Settings().group(TenorItemGroups.TENOR));
 
-	public static final Block COPPER_ORE = register("copper_ore", new Block(FabricBlockSettings.copy(Blocks.IRON_ORE).nonOpaque().build()), new Item.Settings().group(ItemGroup.MISC));
+	public static final Block COPPER_ORE = register("copper_ore", new Block(FabricBlockSettings.copy(Blocks.IRON_ORE).build()), new Item.Settings().group(TenorItemGroups.TENOR));
+	public static final Block COPPER_BLOCK = register("copper_block", new Block(FabricBlockSettings.copy(Blocks.IRON_BLOCK).build()), new Item.Settings().group(TenorItemGroups.TENOR));
 
 	public static void initialize() {
 

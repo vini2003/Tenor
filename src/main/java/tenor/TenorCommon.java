@@ -8,6 +8,7 @@ public class TenorCommon implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		TenorItemGroups.initialize();
 		TenorTags.initialize();
 		TenorItems.initialize();
 		TenorBlocks.initialize();
