@@ -1,6 +1,8 @@
 package tenor.block.entity.renderer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.block.BlockEntityProvider;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -10,6 +12,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
 import tenor.block.WireNodeBlock;
 import tenor.block.entity.WireNodeBlockEntity;
@@ -27,7 +30,12 @@ public class WireNodeBlockEntityRenderer extends BlockEntityRenderer<WireNodeBlo
 
 	@Override
 	public void render(WireNodeBlockEntity be, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, int overlay) {
-		for (WireNodeBlockEntity ch : be.children) {
+		for (BlockPos childPos : be.children) {
+			if (!(be.getWorld().getBlockState(childPos).getBlock() instanceof BlockEntityProvider)) {
+				continue;
+			}
+
+			WireNodeBlockEntity ch = (WireNodeBlockEntity) be.getWorld().getBlockEntity(childPos);
 
 			LinkedHashSet<Vector3f> segments = WireNodeBlockEntity.getSegments(be, ch);
 

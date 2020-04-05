@@ -33,9 +33,9 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 	}};
 
 	public static final Map<Integer, List<Double>> OFFSETS = new HashMap<Integer, List<Double>>() {{
-		put(0, Arrays.asList(0.25));
-		put(1, Arrays.asList(0.5));
-		put(2, Arrays.asList(0.8125));
+		put(0, Arrays.asList(0.360));
+		put(1, Arrays.asList(0.600));
+		put(2, Arrays.asList(0.725));
 	}};
 
 	public static final Map<Integer, Map<Direction, VoxelShape>> SHAPES = new HashMap<Integer, Map<Direction, VoxelShape>>() {{
@@ -257,9 +257,9 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 
 				player.addChatMessage(new LiteralText("§aConnected the connectors at " + WireNodeBlockEntity.getSelected(world).getPos().toShortString() + " and " + pos.toShortString()), true);
 
-				second.parents.add(WireNodeBlockEntity.getSelected(world));
+				second.parents.add(WireNodeBlockEntity.getSelected(world).getPos());
 
-				WireNodeBlockEntity.getSelected(world).children.add(second);
+				WireNodeBlockEntity.getSelected(world).children.add(second.getPos());
 
 				WireNodeBlockEntity.getSelected(world).markDirty();
 				second.markDirty();
@@ -291,12 +291,14 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 	public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity, ItemStack stack) {
 		WireNodeBlockEntity be = (WireNodeBlockEntity) blockEntity;
 
-		be.parents.forEach(parent -> {
-			parent.children.remove(blockEntity);
+		be.parents.forEach(parentPosition -> {
+			WireNodeBlockEntity parent = (WireNodeBlockEntity) world.getBlockEntity(parentPosition);
+			parent.children.remove(blockEntity.getPos());
 		});
 
-		be.children.forEach(child -> {
-			child.parents.remove(blockEntity);
+		be.children.forEach(childPosition -> {
+			WireNodeBlockEntity child = (WireNodeBlockEntity) world.getBlockEntity(childPosition);
+			child.parents.remove(blockEntity.getPos());
 		});
 
 		super.afterBreak(world, player, pos, state, blockEntity, stack);

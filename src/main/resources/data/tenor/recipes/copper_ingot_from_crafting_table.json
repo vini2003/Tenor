@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "tenor:copper_block"
+      "item": "tenor:copper_block"
     }
   ],
   "result": {
