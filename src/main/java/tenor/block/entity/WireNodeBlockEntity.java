@@ -2,26 +2,24 @@ package tenor.block.entity;
 
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.energy.CapacitorComponent;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.particle.ParticleTypes;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 import tenor.block.WireNodeBlock;
 import tenor.initialize.TenorBlockEntities;
-import tenor.initialize.TenorBlocks;
 import tenor.initialize.TenorEnergies;
+import tenor.initialize.TenorItems;
 
 import java.util.*;
 
@@ -107,12 +105,26 @@ public class WireNodeBlockEntity extends BlockEntityEnergized implements Tickabl
 
 		this.energy = available;
 
-		for (WireNodeBlockEntity child : children) {
+		child_loop: for (WireNodeBlockEntity child : children) {
 			for (Vector3f position : WireNodeBlockEntity.getSegments(this, child)) {
-				List<Entity> entities = world.getEntities(null, new Box(position.getX(), position.getY(), position.getZ(), position.getX() + 1, position.getY() + 1, position.getZ() + 1));
-				for (Entity entity : entities) {
-					if (entity instanceof LivingEntity) {
-						entity.damage(DamageSource.CACTUS, (getHarm() + 1) * 4);
+				BlockPos blockPosition = new BlockPos(position.getX(), position.getY(), position.getZ());
+				if (world.getBlockState(blockPosition).getBlock() != Blocks.AIR && !(world.getBlockState(blockPosition).getBlock() instanceof WireNodeBlock)) {
+					if (this.tier == 0) {
+						Block.dropStack(world, blockPosition, new ItemStack(TenorItems.COPPER_COIL));
+					} else if (this.tier == 1) {
+						Block.dropStack(world, blockPosition, new ItemStack(TenorItems.GOLD_COIL));
+					} else if (this.tier == 2) {
+						Block.dropStack(world, blockPosition, new ItemStack(TenorItems.FIBER_COIl));
+					}
+
+					this.children.remove(child);
+					break child_loop;
+				} else {
+					List<Entity> entities = world.getEntities(null, new Box(position.getX(), position.getY(), position.getZ(), position.getX() + 1, position.getY() + 1, position.getZ() + 1));
+					for (Entity entity : entities) {
+						if (entity instanceof LivingEntity) {
+							entity.damage(DamageSource.CACTUS, (getHarm() + 1) * 4);
+						}
 					}
 				}
 			}

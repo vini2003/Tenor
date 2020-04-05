@@ -2,7 +2,19 @@
   "block.tenor.connector_low_voltage": "Low-Voltage Connector",
   "block.tenor.connector_medium_voltage": "Medium-Voltage Connector",
   "block.tenor.connector_high_voltage": "High-Voltage Connector",
+  "block.tenor.copper_ore": "Copper Ore",
   "item.tenor.copper_coil": "Copper Coil",
   "item.tenor.gold_coil": "Gold Coil",
-  "item.tenor.fiber_coil": "Fiber Coil"
+  "item.tenor.fiber_coil": "Fiber Coil",
+  "item.tenor.copper_axe": "Copper Axe",
+  "item.tenor.copper_boots": "Copper Boots",
+  "item.tenor.copper_helmet": "Copper Helmet",
+  "item.tenor.copper_chestplate": "Copper Chestplate",
+  "item.tenor.copper_hoe": "Copper Hoe",
+  "item.tenor.copper_ingot": "Copper Ingot",
+  "item.tenor.copper_leggings": "Copper Leggings",
+  "item.tenor.copper_nugget": "Copper Nugget",
+  "item.tenor.copper_pickaxe": "Copper Pickaxe",
+  "item.tenor.copper_shovel": "Copper Shovel",
+  "item.tenor.copper_sword": "Copper Sword"
 }

@@ -1,16 +1,13 @@
 package tenor.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FacingBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.text.LiteralText;
@@ -155,77 +152,64 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 		}});
 
 		put(2, new HashMap<Direction, VoxelShape>() {{
-			VoxelShape DOWN = Block.createCuboidShape(5, 0, 5, 11, 6, 11);
-			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(5, 7, 5, 11, 8, 11));
-			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(5, 9, 5, 11, 10, 11));
-			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(5, 11, 5, 11, 12, 11));
-			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(5, 13, 5, 11, 14, 11));
-			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(6, 6, 6, 10, 7, 10));
-			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(6, 8, 6, 10, 9, 10));
-			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(6, 10, 6, 10, 11, 10));
-			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(6, 12, 6, 10, 13, 10));
-			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(6, 14, 6, 10, 15, 10));
+			VoxelShape DOWN = Block.createCuboidShape(5, 0, 5, 11, 5, 11);
+			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(5, 6, 5, 11, 7, 11));
+			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(5, 8, 5, 11, 9, 11));
+			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(5, 10, 5, 11, 11, 11));
+			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(6, 5, 6, 10, 6, 10));
+			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(6, 7, 6, 10, 8, 10));
+			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(6, 9, 6, 10, 10, 10));
+			DOWN = VoxelShapes.union(DOWN, Block.createCuboidShape(6, 11, 6, 10, 12, 10));
 
 
-			VoxelShape UP = Block.createCuboidShape(5, 10, 5, 11, 16, 11);
-			UP = VoxelShapes.union(UP, Block.createCuboidShape(5, 8, 5, 11, 9, 11));
-			UP = VoxelShapes.union(UP, Block.createCuboidShape(5, 6, 5, 11, 7, 11));
-			UP = VoxelShapes.union(UP, Block.createCuboidShape(5, 4, 5, 11, 5, 11));
-			UP = VoxelShapes.union(UP, Block.createCuboidShape(5, 2, 5, 11, 3, 11));
-			UP = VoxelShapes.union(UP, Block.createCuboidShape(6, 9, 6, 10, 10, 10));
-			UP = VoxelShapes.union(UP, Block.createCuboidShape(6, 7, 6, 10, 8, 10));
-			UP = VoxelShapes.union(UP, Block.createCuboidShape(6, 5, 6, 10, 6, 10));
-			UP = VoxelShapes.union(UP, Block.createCuboidShape(6, 3, 6, 10, 4, 10));
-			UP = VoxelShapes.union(UP, Block.createCuboidShape(6, 1, 6, 10, 2, 10));
+			VoxelShape UP = Block.createCuboidShape(5, 11, 5, 11, 16, 11);
+			UP = VoxelShapes.union(UP, Block.createCuboidShape(5, 9, 5, 11, 10, 11));
+			UP = VoxelShapes.union(UP, Block.createCuboidShape(5, 7, 5, 11, 8, 11));
+			UP = VoxelShapes.union(UP, Block.createCuboidShape(5, 5, 5, 11, 6, 11));
+			UP = VoxelShapes.union(UP, Block.createCuboidShape(6, 10, 6, 10, 11, 10));
+			UP = VoxelShapes.union(UP, Block.createCuboidShape(6, 8, 6, 10, 9, 10));
+			UP = VoxelShapes.union(UP, Block.createCuboidShape(6, 6, 6, 10, 7, 10));
+			UP = VoxelShapes.union(UP, Block.createCuboidShape(6, 4, 6, 10, 5, 10));
 
 
-			VoxelShape EAST = Block.createCuboidShape(10, 5, 5, 16, 11, 11);
-			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(8, 5, 5, 9, 11, 11));
-			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(6, 5, 5, 7, 11, 11));
-			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(4, 5, 5, 5, 11, 11));
-			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(2, 5, 5, 3, 11, 11));
-			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(9, 6, 6, 10, 10, 10));
-			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(7, 6, 6, 8, 10, 10));
-
-			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(5, 6, 6, 6, 10, 10));
-			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(3, 6, 6, 4, 10, 10));
-			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(1, 6, 6, 2, 10, 10));
+			VoxelShape EAST = Block.createCuboidShape(11, 5, 5, 16, 11, 11);
+			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(9, 5, 5, 10, 11, 11));
+			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(7, 5, 5, 8, 11, 11));
+			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(5, 5, 5, 6, 11, 11));
+			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(10, 6, 6, 11, 10, 10));
+			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(8, 6, 6, 9, 10, 10));
+			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(6, 6, 6, 7, 10, 10));
+			EAST = VoxelShapes.union(EAST, Block.createCuboidShape(4, 6, 6, 5, 10, 10));
 
 
-			VoxelShape WEST = Block.createCuboidShape(0, 5, 5, 6, 11, 11);
-			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(7, 5, 5, 8, 11, 11));
-			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(9, 5, 5, 10, 11, 11));
-			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(11, 5, 5, 12, 11, 11));
-			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(13, 5, 5, 14, 11, 11));
-			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(6, 6, 6, 7, 10, 10));
-			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(8, 6, 6, 9, 10, 10));
-			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(10, 6, 6, 11, 10, 10));
-			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(12, 6, 6, 13, 10, 10));
-			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(14, 6, 6, 15, 10, 10));
+			VoxelShape WEST = Block.createCuboidShape(0, 5, 5, 5, 11, 11);
+			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(6, 5, 5, 7, 11, 11));
+			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(8, 5, 5, 9, 11, 11));
+			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(10, 5, 5, 11, 11, 11));
+			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(5, 6, 6, 6, 10, 10));
+			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(7, 6, 6, 8, 10, 10));
+			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(9, 6, 6, 10, 10, 10));
+			WEST = VoxelShapes.union(WEST, Block.createCuboidShape(11, 6, 6, 12, 10, 10));
 
 
-			VoxelShape SOUTH = Block.createCuboidShape(5, 5, 10, 11, 11, 16);
-			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(5, 5, 8, 11, 11, 9));
-			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(5, 5, 6, 11, 11, 7));
-			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(5, 5, 4, 11, 11, 5));
-			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(5, 5, 2, 11, 11, 3));
-			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(6, 6, 9, 10, 10, 10));
-			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(6, 6, 7, 10, 10, 8));
-			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(6, 6, 5, 10, 10, 6));
-			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(6, 6, 3, 10, 10, 4));
-			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(6, 6, 1, 10, 10, 2));
+			VoxelShape SOUTH = Block.createCuboidShape(5, 5, 11, 11, 11, 16);
+			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(5, 5, 9, 11, 11, 10));
+			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(5, 5, 7, 11, 11, 8));
+			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(5, 5, 5, 11, 11, 6));
+			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(6, 6, 10, 10, 10, 11));
+			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(6, 6, 8, 10, 10, 9));
+			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(6, 6, 6, 10, 10, 7));
+			SOUTH = VoxelShapes.union(SOUTH, Block.createCuboidShape(6, 6, 4, 10, 10, 5));
 
 
-			VoxelShape NORTH = Block.createCuboidShape(5, 5, 0, 11, 11, 6);
-			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(5, 5, 7, 11, 11, 8));
-			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(5, 5, 9, 11, 11, 10));
-			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(5, 5, 11, 11, 11, 12));
-			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(5, 5, 13, 11, 11, 14));
-			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(6, 6, 6, 10, 10, 7));
-			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(6, 6, 8, 10, 10, 9));
-			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(6, 6, 10, 10, 10, 11));
-			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(6, 6, 12, 10, 10, 13));
-			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(6, 6, 14, 10, 10, 15));
+			VoxelShape NORTH = Block.createCuboidShape(5, 5, 0, 11, 11, 5);
+			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(5, 5, 6, 11, 11, 7));
+			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(5, 5, 8, 11, 11, 9));
+			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(5, 5, 10, 11, 11, 11));
+			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(6, 6, 5, 10, 10, 6));
+			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(6, 6, 7, 10, 10, 8));
+			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(6, 6, 9, 10, 10, 10));
+			NORTH = VoxelShapes.union(NORTH, Block.createCuboidShape(6, 6, 11, 10, 10, 12));
 
 			put(Direction.DOWN, DOWN);
 			put(Direction.UP, UP);
@@ -255,9 +239,23 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 		if (WireNodeBlockEntity.getSelected(world) != null) {
 			if (player.getStackInHand(hand).getItem() == TenorItems.COPPER_COIL && this.tier == 0
 			||  player.getStackInHand(hand).getItem() == TenorItems.GOLD_COIL && this.tier == 1
-			||  player.getStackInHand(hand).getItem() == TenorItems.FIBER__COIL && this.tier == 2) {
+			||  player.getStackInHand(hand).getItem() == TenorItems.FIBER_COIl && this.tier == 2) {
 				WireNodeBlockEntity second = (WireNodeBlockEntity) world.getBlockEntity(pos);
-				player.addChatMessage(new LiteralText("Connected the connectors at " + WireNodeBlockEntity.first[world.isClient ? 1 : 0].getPos().toShortString() + " and " + pos.toShortString()), true);
+
+				LinkedHashSet<Vector3f> positions = WireNodeBlockEntity.getSegments(WireNodeBlockEntity.getSelected(world), second);
+
+				for (Vector3f position : positions) {
+					BlockPos blockPosition = new BlockPos(position.getX(), position.getY(), position.getZ());
+
+					if (world.getBlockState(blockPosition).getBlock() != Blocks.AIR && !(world.getBlockState(blockPosition).getBlock() instanceof WireNodeBlock)) {
+						player.addChatMessage(new LiteralText("§cConnection failed, wire path blocked."), true);
+						world.addParticle(ParticleTypes.BARRIER, blockPosition.getX(), blockPosition.getY(), blockPosition.getZ(), 0, 0, 0);
+						WireNodeBlockEntity.setSelected(world, null);
+						return ActionResult.FAIL;
+					}
+				}
+
+				player.addChatMessage(new LiteralText("§aConnected the connectors at " + WireNodeBlockEntity.getSelected(world).getPos().toShortString() + " and " + pos.toShortString()), true);
 
 				second.parents.add(WireNodeBlockEntity.getSelected(world));
 
@@ -265,18 +263,24 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 				WireNodeBlockEntity.setSelected(world, null);
 
 				player.getStackInHand(hand).decrement(1);
+				return ActionResult.SUCCESS;
+			} else {
+				WireNodeBlockEntity.setSelected(world, null);
+				return ActionResult.FAIL;
 			}
 
 		} else {
 			if (player.getStackInHand(hand).getItem() == TenorItems.COPPER_COIL && this.tier == 0
 			||  player.getStackInHand(hand).getItem() == TenorItems.GOLD_COIL && this.tier == 1
-			||  player.getStackInHand(hand).getItem() == TenorItems.FIBER__COIL && this.tier == 2) {
-				player.addChatMessage(new LiteralText("Selected the connector at " + pos.toShortString() + "."), true);
+			||  player.getStackInHand(hand).getItem() == TenorItems.FIBER_COIl && this.tier == 2) {
+				player.addChatMessage(new LiteralText("§6Selected the connector at " + pos.toShortString() + "."), true);
 				WireNodeBlockEntity.setSelected(world, (WireNodeBlockEntity) world.getBlockEntity(pos));
+				return ActionResult.SUCCESS;
+			} else {
+				WireNodeBlockEntity.setSelected(world, null);
+				return ActionResult.FAIL;
 			}
 		}
-
-		return ActionResult.SUCCESS;
 	}
 
 	@Override
@@ -285,6 +289,10 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 
 		be.parents.forEach(parent -> {
 			parent.children.remove(blockEntity);
+		});
+
+		be.children.forEach(child -> {
+			child.parents.remove(blockEntity);
 		});
 
 		super.afterBreak(world, player, pos, state, blockEntity, stack);

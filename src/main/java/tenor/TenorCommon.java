@@ -15,6 +15,7 @@ public class TenorCommon implements ModInitializer {
 		TenorContainers.initialize();
 		TenorSerializers.initialize();
 		TenorEnergies.initialize();
+		TenorFeatures.initialize();
 		TenorCallbacks.initialize();
 	}
 }
