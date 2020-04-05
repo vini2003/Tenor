@@ -1,12 +1,13 @@
 package tenor.block;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FacingBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -22,20 +23,18 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.MutablePair;
 import tenor.block.entity.WireNodeBlockEntity;
-import tenor.initialize.TenorEnergies;
-import tenor.network.NetworkComponent;
-import tenor.network.NetworkManager;
-import tenor.network.NetworkTicker;
-import tenor.network.NetworkTracer;
+import tenor.initialize.TenorItems;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class WireNodeBlock extends Block implements BlockEntityProvider, NetworkComponent {
+public class WireNodeBlock extends Block implements BlockEntityProvider {
+	public static final Map<Integer, Integer[]> COLORS = new HashMap<Integer, Integer[]>() {{
+		put(0, new Integer[]{229, 130, 18, 255});
+		put(1, new Integer[]{229, 190, 18, 255});
+		put(2, new Integer[]{185, 239, 247, 255});
+	}};
+
 	public static final Map<Integer, List<Double>> OFFSETS = new HashMap<Integer, List<Double>>() {{
 		put(0, Arrays.asList(0.25));
 		put(1, Arrays.asList(0.5));
@@ -253,20 +252,42 @@ public class WireNodeBlock extends Block implements BlockEntityProvider, Network
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if (!world.isClient) {
-			return ActionResult.SUCCESS;
-		}
+		if (WireNodeBlockEntity.getSelected(world) != null) {
+			if (player.getStackInHand(hand).getItem() == TenorItems.COPPER_COIL && this.tier == 0
+			||  player.getStackInHand(hand).getItem() == TenorItems.GOLD_COIL && this.tier == 1
+			||  player.getStackInHand(hand).getItem() == TenorItems.FIBER__COIL && this.tier == 2) {
+				WireNodeBlockEntity second = (WireNodeBlockEntity) world.getBlockEntity(pos);
+				player.addChatMessage(new LiteralText("Connected the connectors at " + WireNodeBlockEntity.first[world.isClient ? 1 : 0].getPos().toShortString() + " and " + pos.toShortString()), true);
 
-		if (WireNodeBlockEntity.lu != null) {
-			player.addChatMessage(new LiteralText("Connected the connectors at " + WireNodeBlockEntity.lu.getPos().toShortString() + " and " + pos.toShortString()), true);
-			WireNodeBlockEntity.lu.children.add((WireNodeBlockEntity) world.getBlockEntity(pos));
-			WireNodeBlockEntity.lu = null;
+				second.parents.add(WireNodeBlockEntity.getSelected(world));
+
+				WireNodeBlockEntity.getSelected(world).children.add(second);
+				WireNodeBlockEntity.setSelected(world, null);
+
+				player.getStackInHand(hand).decrement(1);
+			}
+
 		} else {
-			player.addChatMessage(new LiteralText("Selected the connector at " + pos.toShortString() + "."), true);
-			WireNodeBlockEntity.lu = (WireNodeBlockEntity) world.getBlockEntity(pos);
+			if (player.getStackInHand(hand).getItem() == TenorItems.COPPER_COIL && this.tier == 0
+			||  player.getStackInHand(hand).getItem() == TenorItems.GOLD_COIL && this.tier == 1
+			||  player.getStackInHand(hand).getItem() == TenorItems.FIBER__COIL && this.tier == 2) {
+				player.addChatMessage(new LiteralText("Selected the connector at " + pos.toShortString() + "."), true);
+				WireNodeBlockEntity.setSelected(world, (WireNodeBlockEntity) world.getBlockEntity(pos));
+			}
 		}
 
 		return ActionResult.SUCCESS;
+	}
+
+	@Override
+	public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity, ItemStack stack) {
+		WireNodeBlockEntity be = (WireNodeBlockEntity) blockEntity;
+
+		be.parents.forEach(parent -> {
+			parent.children.remove(blockEntity);
+		});
+
+		super.afterBreak(world, player, pos, state, blockEntity, stack);
 	}
 
 	@Override
@@ -295,32 +316,5 @@ public class WireNodeBlock extends Block implements BlockEntityProvider, Network
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
 		super.appendProperties(builder);
 		builder.add(FACING);
-	}
-
-	/**
-	 * Implement Network API.
-	 */
-	@Override
-	public NetworkTicker getNetworkType() {
-		return TenorEnergies.ENERGY_TYPE;
-	}
-
-	@Override
-	public boolean accepts(Object... objects) {
-		if (objects[0] != getNetworkType()) return false;
-
-		for (int i = 1; i < objects.length; ++i) {
-			if (objects[i] instanceof WireNodeBlock) {
-				WireNodeBlock block = (WireNodeBlock) objects[i];
-				if (tier != block.tier) return false;
-			}
-		}
-
-		return true;
-	}
-
-	@Override
-	public boolean isBuffer() {
-		return true;
 	}
 }

@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BlockEntityEnergized extends BlockEntity implements CapacitorComponent {
-	public int energy = 0x00000000;
+	public int energy = 0;
 	
-	public int minEnergy = 0x00000000;
-	public int maxEnergy = 0xffffffff;
+	public int minEnergy = 0;
+	public int maxEnergy = Integer.MAX_VALUE;
 
-	public int minTransfer = 0x00000000;
-	public int maxTransfer = 0xffffffff;
+	public int minTransfer = 0;
+	public int maxTransfer = Integer.MAX_VALUE;
 
 	public List<Runnable> listeners = new ArrayList<>();
 

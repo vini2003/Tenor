@@ -1,11 +1,16 @@
 package tenor.initialize;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import tenor.TenorCommon;
 
 public class TenorItems {
+	public static final Item COPPER_COIL = register("copper_coil", new Item(new Item.Settings().group(ItemGroup.MISC)));
+	public static final Item GOLD_COIL = register("gold_coil", new Item(new Item.Settings().group(ItemGroup.MISC)));
+	public static final Item FIBER__COIL = register("fiber_coil", new Item(new Item.Settings().group(ItemGroup.MISC)));
+
 	public static void initialize() {
 
 	}
