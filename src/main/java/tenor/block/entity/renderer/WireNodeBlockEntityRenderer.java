@@ -41,12 +41,24 @@ public class WireNodeBlockEntityRenderer extends BlockEntityRenderer<WireNodeBlo
 					z1 += pr.getKey().floatValue();
 					break;
 				case WEST:
+					x1 += 1f - pr.getKey().floatValue();
+					y1 += 0.5f;
+					z1 += 0.5f;
 					break;
 				case EAST:
+					x1 += pr.getKey().floatValue();
+					y1 += 0.5f;
+					z1 += 0.5f;
 					break;
 				case UP:
+					x1 += 0.5f;
+					y1 += pr.getKey().floatValue();
+					z1 += 0.5f;
 					break;
 				case DOWN:
+					x1 += 0.5f;
+					y1 += 1 - pr.getKey().floatValue();
+					z1 += 0.5f;
 					break;
 			}
 
@@ -66,12 +78,24 @@ public class WireNodeBlockEntityRenderer extends BlockEntityRenderer<WireNodeBlo
 					z3 += pr.getKey().floatValue();
 					break;
 				case WEST:
+					x3 += 1f - pr.getKey().floatValue();
+					y3 += 0.5f;
+					z3 += 0.5f;
 					break;
 				case EAST:
+					x3 += pr.getKey().floatValue();
+					y3 += 0.5f;
+					z3 += 0.5f;
 					break;
 				case UP:
+					x3 += 0.5f;
+					y3 += pr.getKey().floatValue();
+					z3 += 0.5f;
 					break;
 				case DOWN:
+					x3 += 0.5f;
+					y3 += 1 - pr.getKey().floatValue();
+					z3 += 0.5f;
 					break;
 			}
 
