@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 public class TenorBlockEntities {
 	public static final BlockEntityType<WireNodeBlockEntity> CONNECTOR_ENTITY_TYPE = register(
-			TenorCommon.MOD_ID + "connector_entity",
+			"connector_entity",
 			WireNodeBlockEntity::new,
 			TenorBlocks.CONNECTOR_LOW_VOLTAGE,
 			TenorBlocks.CONNECTOR_MEDIUM_VOLTAGE,
