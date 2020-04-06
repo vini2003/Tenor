@@ -5,6 +5,7 @@ import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -30,6 +31,8 @@ public class WireNodeBlockEntityRenderer extends BlockEntityRenderer<WireNodeBlo
 			WireNodeBlockEntity ch = (WireNodeBlockEntity) be.getWorld().getBlockEntity(childPos);
 
 			LinkedHashSet<Vector3f> segments = WireNodeBlockEntity.getSegments(be, ch);
+
+			if (segments.size() == 0) return;
 
 			Vector3f origin = segments.iterator().next();
 			Vector3f previous = origin;
@@ -59,5 +62,10 @@ public class WireNodeBlockEntityRenderer extends BlockEntityRenderer<WireNodeBlo
 
 			matrixStack.pop();
 		}
+	}
+
+	@Override
+	public boolean rendersOutsideBoundingBox(WireNodeBlockEntity blockEntity) {
+		return true;
 	}
 }
