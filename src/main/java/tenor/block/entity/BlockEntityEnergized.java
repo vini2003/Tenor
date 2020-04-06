@@ -12,7 +12,7 @@ import java.util.List;
 
 public abstract class BlockEntityEnergized extends BlockEntity implements CapacitorComponent {
 	public int energy = 0;
-	
+
 	public int minEnergy = 0;
 	public int maxEnergy = Integer.MAX_VALUE;
 
@@ -105,7 +105,7 @@ public abstract class BlockEntityEnergized extends BlockEntity implements Capaci
 	}
 
 	public int getMaxTransfer() {
-		return maxTransfer;
+		return 4096 * (((WireNodeBlockEntity) this).tier + 1);
 	}
 
 	public int getMinTransfer() {

@@ -1,8 +1,6 @@
 package tenor.block.entity.renderer;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -11,17 +9,11 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
-import org.lwjgl.opengl.GL11;
 import tenor.block.WireNodeBlock;
 import tenor.block.entity.WireNodeBlockEntity;
-import tenor.initialize.TenorEnergies;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
 
 public class WireNodeBlockEntityRenderer extends BlockEntityRenderer<WireNodeBlockEntity> {
 	public WireNodeBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {

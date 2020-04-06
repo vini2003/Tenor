@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "tenor:block/copper_ore"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "tenor:block/copper_ore"
+    }
+  }
 }

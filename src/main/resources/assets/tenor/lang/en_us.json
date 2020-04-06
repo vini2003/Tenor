@@ -18,5 +18,11 @@
   "item.tenor.copper_pickaxe": "Copper Pickaxe",
   "item.tenor.copper_shovel": "Copper Shovel",
   "item.tenor.copper_sword": "Copper Sword",
-  "itemGroup.tenor.tenor": "Tenor"
+  "itemGroup.tenor.tenor": "Tenor",
+  "text.tenor.connected_connectors_one": "§aConnected the connectors at ",
+  "text.tenor.connected_connectors_two": " and ",
+  "text.tenor.connected_connectors_three": ".",
+  "text.tenor.connection_failed": "§cConnection failed, wire path blocked.",
+  "text.tenor.selected_connectors_one": "§6Selected the connector at ",
+  "text.tenor.selected_connectors_two": "."
 }

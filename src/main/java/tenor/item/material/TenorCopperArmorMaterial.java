@@ -2,7 +2,6 @@ package tenor.item.material;
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -31,7 +30,7 @@ public class TenorCopperArmorMaterial implements ArmorMaterial {
 
 	@Override
 	public SoundEvent getEquipSound() {
-		return  SoundEvents.ITEM_ARMOR_EQUIP_IRON;
+		return SoundEvents.ITEM_ARMOR_EQUIP_IRON;
 	}
 
 	@Override

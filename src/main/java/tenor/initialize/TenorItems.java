@@ -23,7 +23,7 @@ public class TenorItems {
 	public static final Item COPPER_HOE = register("copper_hoe", new HoeItem(TenorMaterials.TOOL_COPPER, -1.7F, new Item.Settings().group(TenorItemGroups.TENOR)));
 
 	public static final Item COPPER_HELMET = register("copper_helmet", new ArmorItem(TenorMaterials.ARMOR_COPPER, EquipmentSlot.HEAD, new Item.Settings().group(TenorItemGroups.TENOR)));
-	public static final Item COPPER_CHESTPLATE= register("copper_chestplate", new ArmorItem(TenorMaterials.ARMOR_COPPER, EquipmentSlot.CHEST, new Item.Settings().group(TenorItemGroups.TENOR)));
+	public static final Item COPPER_CHESTPLATE = register("copper_chestplate", new ArmorItem(TenorMaterials.ARMOR_COPPER, EquipmentSlot.CHEST, new Item.Settings().group(TenorItemGroups.TENOR)));
 	public static final Item COPPER_LEGGINGS = register("copper_leggings", new ArmorItem(TenorMaterials.ARMOR_COPPER, EquipmentSlot.LEGS, new Item.Settings().group(TenorItemGroups.TENOR)));
 	public static final Item COPPER_BOOTS = register("copper_boots", new ArmorItem(TenorMaterials.ARMOR_COPPER, EquipmentSlot.FEET, new Item.Settings().group(TenorItemGroups.TENOR)));
 

@@ -24,8 +24,8 @@ public class TenorBlockEntities {
 	}
 
 	/**
-	 * @param name Name of BlockEntityType instance to be registered
-	 * @param supplier Supplier of BlockEntity to use for BlockEntityType
+	 * @param name            Name of BlockEntityType instance to be registered
+	 * @param supplier        Supplier of BlockEntity to use for BlockEntityType
 	 * @param supportedBlocks Blocks the BlockEntity can be attached to
 	 * @return Registered BlockEntityType
 	 */

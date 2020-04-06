@@ -8,7 +8,7 @@ import tenor.TenorCommon;
 
 public class TenorItemGroups {
 	public static ItemGroup TENOR = FabricItemGroupBuilder.build(new Identifier(TenorCommon.MOD_ID, "tenor"), () -> new ItemStack(TenorBlocks.CONNECTOR_MEDIUM_VOLTAGE));
-	
+
 	public static void initialize() {
 
 	}
