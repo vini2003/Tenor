@@ -27,16 +27,13 @@ import tenor.block.WireNodeBlock;
 import tenor.initialize.TenorBlockEntities;
 import tenor.initialize.TenorEnergies;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class WireNodeBlockEntity extends BlockEntityEnergized implements BlockEntityClientSerializable, Tickable, CapacitorComponent {
 	public static WireNodeBlockEntity[] first = new WireNodeBlockEntity[2];
 	public int tier = -1;
-	public HashSet<BlockPos> children = new HashSet<>();
-	public HashSet<BlockPos> parents = new HashSet<>();
+	public ArrayList<BlockPos> children = new ArrayList<>();
+	public ArrayList<BlockPos> parents = new ArrayList<BlockPos>();
 
 	public WireNodeBlockEntity() {
 		super(TenorBlockEntities.CONNECTOR_ENTITY_TYPE);
@@ -55,6 +52,7 @@ public class WireNodeBlockEntity extends BlockEntityEnergized implements BlockEn
 
 		if (ch == null || be == null) return positions;
 		if (ch.world == null || be.world == null) return positions;
+		if (!(be.world.getBlockState(be.getPos()).getBlock() instanceof WireNodeBlock)) return positions;
 
 		double oY = WireNodeBlock.OFFSETS.get(((WireNodeBlock) be.getCachedState().getBlock()).tier);
 
@@ -197,29 +195,28 @@ public class WireNodeBlockEntity extends BlockEntityEnergized implements BlockEn
 			if (component != null) {
 				if (component.canInsertEnergy() && !component.canExtractEnergy()) {
 					available -= (component.insertEnergy(TenorEnergies.ENERGY, Math.min(available, component.getMaxEnergy()), ActionType.PERFORM));
-				} else if (!component.canInsertEnergy() && component.canExtractEnergy()) {
-					available += component.extractEnergy(TenorEnergies.ENERGY, component.getCurrentEnergy(), ActionType.PERFORM);
+				} else if (!component.canInsertEnergy() && component.canExtractEnergy() && this.getCurrentEnergy() < this.getMaxEnergy()) {
+					available += component.extractEnergy(TenorEnergies.ENERGY, this.getMaxEnergy() - this.getCurrentEnergy(), ActionType.PERFORM);
 				}
 			}
 		}
 
-		if (!children.isEmpty()) {
-			for (BlockPos position : this.children) {
-				BlockEntity blockEntity = world.getBlockEntity(position);
-				if (blockEntity != null) {
-					BlockEntityEnergized child = (BlockEntityEnergized) blockEntity;
-					available -= (available - child.insertEnergy(TenorEnergies.ENERGY, Math.min(available, child.getMaxTransfer()), ActionType.PERFORM));
-				}
-			}
-		}
+		/*
+		 * I fully understand the consequences of my actions,
+		 * but time is finite and ModFest demands a sacrifice.
+		 */
+		ArrayList<BlockPos> friends = new ArrayList<>();
 
-		if (!parents.isEmpty()) {
-			for (BlockPos position : this.parents) {
-				BlockEntity blockEntity = world.getBlockEntity(position);
-				if (blockEntity != null) {
-					BlockEntityEnergized child = (BlockEntityEnergized) blockEntity;
-					available -= (available - child.insertEnergy(TenorEnergies.ENERGY, Math.min(available, child.getMaxTransfer()), ActionType.PERFORM));
-				}
+		friends.addAll(children);
+		friends.addAll(parents);
+
+		Collections.shuffle(friends);
+
+		for (BlockPos position : friends) {
+			BlockEntity blockEntity = world.getBlockEntity(position);
+			if (blockEntity != null) {
+				BlockEntityEnergized friend = (BlockEntityEnergized) blockEntity;
+				available -= (available - friend.insertEnergy(TenorEnergies.ENERGY, Math.min(available, friend.getMaxTransfer()), ActionType.PERFORM));
 			}
 		}
 

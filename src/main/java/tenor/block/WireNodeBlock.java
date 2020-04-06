@@ -1,5 +1,7 @@
 package tenor.block;
 
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.server.PlayerStream;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.util.math.Vector3f;
@@ -7,7 +9,6 @@ import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
@@ -23,10 +24,13 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import tenor.block.entity.WireNodeBlockEntity;
 import tenor.initialize.TenorItems;
+import tenor.initialize.TenorPacketsCommon;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class WireNodeBlock extends Block implements BlockEntityProvider {
 	public static final Map<Integer, Integer[]> COLORS = new HashMap<Integer, Integer[]>() {{
@@ -298,22 +302,51 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 	}
 
 	@Override
-	public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity, ItemStack stack) {
-		WireNodeBlockEntity be = (WireNodeBlockEntity) blockEntity;
+	public void onBlockRemoved(BlockState state, World world, BlockPos position, BlockState newState, boolean moved) {
+		if (state.getBlock() != newState.getBlock()) {
+			BlockEntity blockEntity = world.getBlockEntity(position);
 
-		be.parents.forEach(parentPosition -> {
+			if (blockEntity != null) {
+				Stream<PlayerEntity> players = PlayerStream.around(world, position, 512);
+
+				players.forEach(playerEntity -> {
+					ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerEntity, TenorPacketsCommon.CONNECTOR_REMOVAL_PACKET, TenorPacketsCommon.createConnectorRemovalPacket(blockEntity));
+				});
+
+				onConnectorBroken(blockEntity, world);
+			}
+		}
+
+		super.onBlockRemoved(state, world, position, newState, moved);
+	}
+
+	public static void onConnectorBroken(BlockPos connectorPosition, List<BlockPos> friends, World world) {
+		for (BlockPos friendPosition : friends) {
+			BlockEntity blockEntity = world.getBlockEntity(friendPosition);
+
+			if (blockEntity != null) {
+				WireNodeBlockEntity friend = (WireNodeBlockEntity) blockEntity;
+
+				friend.children.remove(connectorPosition);
+				friend.parents.remove(connectorPosition);
+			}
+		}
+	}
+
+	public static void onConnectorBroken(BlockEntity blockEntity, World world) {
+		WireNodeBlockEntity wireEntity = (WireNodeBlockEntity) blockEntity;
+
+		wireEntity.parents.forEach(parentPosition -> {
 			WireNodeBlockEntity parent = (WireNodeBlockEntity) world.getBlockEntity(parentPosition);
 
 			if (parent != null) parent.children.remove(blockEntity.getPos());
 		});
 
-		be.children.forEach(childPosition -> {
+		wireEntity.children.forEach(childPosition -> {
 			WireNodeBlockEntity child = (WireNodeBlockEntity) world.getBlockEntity(childPosition);
 
 			if (child != null) child.parents.remove(blockEntity.getPos());
 		});
-
-		super.afterBreak(world, player, pos, state, blockEntity, stack);
 	}
 
 	@Override
