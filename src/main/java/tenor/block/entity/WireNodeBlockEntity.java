@@ -310,6 +310,8 @@ public class WireNodeBlockEntity extends BlockEntityEnergized implements BlockEn
 	public void fromTag(CompoundTag tag) {
 		this.tier = tag.getInt("tier");
 
+		this.children.clear();
+
 		CompoundTag childrenSubtag = (CompoundTag) tag.get("children");
 
 		if (childrenSubtag != null) {
@@ -318,6 +320,8 @@ public class WireNodeBlockEntity extends BlockEntityEnergized implements BlockEn
 				this.children.add(new BlockPos(position[0], position[1], position[2]));
 			}
 		}
+
+		this.parents.clear();
 
 		CompoundTag parentSubtag = (CompoundTag) tag.get("parents");
 

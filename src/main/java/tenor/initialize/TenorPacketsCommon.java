@@ -1,5 +1,6 @@
 package tenor.initialize;
 
+import io.github.cottonmc.component.item.InventoryComponent;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.Identifier;
@@ -12,7 +13,6 @@ public class TenorPacketsCommon {
 	public static final Identifier CONNECTOR_REMOVAL_PACKET = new Identifier(TenorCommon.MOD_ID, "connector_removal_packet");
 
 	public static void initialize() {
-
 	}
 
 	public static PacketByteBuf createConnectorRemovalPacket(BlockEntity blockEntity) {

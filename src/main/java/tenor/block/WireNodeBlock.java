@@ -251,9 +251,11 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		if (WireNodeBlockEntity.getSelected(world) != null) {
 			if (WireNodeBlock.COILS.get(tier) == player.getStackInHand(hand).getItem()) {
+				String fancyPositionA = "[" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "]";
+
 				WireNodeBlockEntity second = (WireNodeBlockEntity) world.getBlockEntity(pos);
 
-				if (second == null) return ActionResult.FAIL;
+				String fancyPositionB = "[" + second.getPos().getX() + ", " + second.getPos().getY() + ", " + second.getPos().getZ() + "]";
 
 				LinkedHashSet<Vector3f> positions = WireNodeBlockEntity.getSegments(WireNodeBlockEntity.getSelected(world), second);
 
@@ -269,9 +271,9 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 				}
 
 				player.addChatMessage(new TranslatableText("text.tenor.connected_connectors_one")
-						.append(WireNodeBlockEntity.getSelected(world).getPos().toString())
+						.append(fancyPositionA)
 						.append(new TranslatableText("text.tenor.connected_connectors_two"))
-						.append(pos.toString())
+						.append(fancyPositionB)
 						.append(new TranslatableText("text.tenor.connected_connectors_three")), true);
 
 				second.parents.add(WireNodeBlockEntity.getSelected(world).getPos());
@@ -279,6 +281,11 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 
 				WireNodeBlockEntity.getSelected(world).markDirty();
 				second.markDirty();
+
+				if (!world.isClient()) {
+					WireNodeBlockEntity.getSelected(world).sync();
+					second.sync();
+				}
 
 				WireNodeBlockEntity.setSelected(world, null);
 
@@ -291,7 +298,8 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 
 		} else {
 			if (WireNodeBlock.COILS.get(tier) == player.getStackInHand(hand).getItem()) {
-				player.addChatMessage(new TranslatableText("text.tenor.selected_connectors_one").append(pos.toString()).append(new TranslatableText("text.tenor.selected_connectors_two")), true);
+				String fancyPosition = "[" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "]";
+				player.addChatMessage(new TranslatableText("text.tenor.selected_connectors_one").append(fancyPosition).append(new TranslatableText("text.tenor.selected_connectors_two")), true);
 				WireNodeBlockEntity.setSelected(world, (WireNodeBlockEntity) world.getBlockEntity(pos));
 				return ActionResult.SUCCESS;
 			} else {
@@ -307,13 +315,27 @@ public class WireNodeBlock extends Block implements BlockEntityProvider {
 			BlockEntity blockEntity = world.getBlockEntity(position);
 
 			if (blockEntity != null) {
-				Stream<PlayerEntity> players = PlayerStream.around(world, position, 512);
+				WireNodeBlockEntity removedEntity = (WireNodeBlockEntity) blockEntity;
 
-				players.forEach(playerEntity -> {
-					ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerEntity, TenorPacketsCommon.CONNECTOR_REMOVAL_PACKET, TenorPacketsCommon.createConnectorRemovalPacket(blockEntity));
-				});
+				onConnectorBroken(removedEntity, world);
 
-				onConnectorBroken(blockEntity, world);
+				for (BlockPos child : removedEntity.children) {
+					BlockEntity blockEntityA = world.getBlockEntity(child);
+
+					if (blockEntityA != null) {
+						WireNodeBlockEntity wireEntity = (WireNodeBlockEntity) blockEntityA;
+						wireEntity.sync();
+					}
+				}
+
+				for (BlockPos parent : removedEntity.parents) {
+					BlockEntity blockEntityA = world.getBlockEntity(parent);
+
+					if (blockEntityA != null) {
+						WireNodeBlockEntity wireEntity = (WireNodeBlockEntity) blockEntityA;
+						wireEntity.sync();
+					}
+				}
 			}
 		}
 
